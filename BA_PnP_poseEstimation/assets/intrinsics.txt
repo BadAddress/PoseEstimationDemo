@@ -1,0 +1,4 @@
+Aligned Depth (Color Camera View) Intrinsics: 
+Width: 1280, Height: 720
+PPX: 635.311, PPY: 371.241
+FX: 911.666, FY: 911.376
