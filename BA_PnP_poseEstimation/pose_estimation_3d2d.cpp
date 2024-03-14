@@ -4,6 +4,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
 #include <Eigen/Core>
+#include <Eigen/Geometry>
+#include <Eigen/Dense>
 #include <g2o/core/base_vertex.h>
 #include <g2o/core/base_unary_edge.h>
 #include <g2o/core/sparse_optimizer.h>
@@ -13,6 +15,8 @@
 #include <g2o/solvers/dense/linear_solver_dense.h>
 #include <sophus/se3.hpp>
 #include <chrono>
+#include <pangolin/pangolin.h>
+
 
 using namespace std;
 using namespace cv;
@@ -20,15 +24,28 @@ using namespace cv;
 typedef vector<Eigen::Vector2d, Eigen::aligned_allocator<Eigen::Vector2d>> VecVector2d;
 typedef vector<Eigen::Vector3d, Eigen::aligned_allocator<Eigen::Vector3d>> VecVector3d;
 
+
+
+
 void getFeaturePointsAndMatch(Mat img1,Mat img2,vector<KeyPoint>& kps1,vector<KeyPoint>& kps2,vector<DMatch>& matches);
 
-cv::Point2d pixelToCamNorm(const Point2d& pixelCordinate, const Mat& intrinsicMatrix);
+cv::Point2d pixelToCamNorm(const Point2d& pixelCoordinate, const Mat& intrinsicMatrix);
 
 void bundleAdjustmentGaussNewton(
   const VecVector3d& points_3d,
   const VecVector2d& points_2d,
   const Mat& intrinsicMatrix,
   Sophus::SE3d& Transformation);
+
+void bundleAdjustmentG2O(
+  const VecVector3d &points_3d,
+  const VecVector2d &points_2d,
+  const Mat &K,
+  Sophus::SE3d &Transformation);
+
+
+void DrawGrid(double grid_size, int num_grid, int plane, double r, double g, double b); 
+void DrawCamera(const Eigen::Isometry3d& T, float lineWidth, float size,bool);
 
 
 
@@ -78,10 +95,78 @@ int main(){
 
 
     Sophus::SE3d Trans;
-    bundleAdjustmentGaussNewton(pts_1_3d_eigen,pts_2_pixel_eigen,K,Trans);
-    return 0;
-}
+    // bundleAdjustmentGaussNewton(pts_1_3d_eigen,pts_2_pixel_eigen,K,Trans);
+    bundleAdjustmentG2O(pts_1_3d_eigen,pts_2_pixel_eigen,K,Trans);
 
+
+/*========= VISUALIZE PART ===============================================================================================================================*/
+/*========= VISUALIZE PART ===============================================================================================================================*/
+/*========= VISUALIZE PART ===============================================================================================================================*/
+/*========= VISUALIZE PART ===============================================================================================================================*/
+
+    Eigen::Isometry3d C0_POSE__W_based = Eigen::Isometry3d::Identity();
+    Eigen::Matrix3d R_W_to_C0;
+    R_W_to_C0 << 1, 0,  0,
+                 0, 0, -1,
+                 0, 1,  0;
+    Eigen::Vector3d C0_translation = Eigen::Vector3d(3,3,3);
+    C0_POSE__W_based.rotate(R_W_to_C0.inverse());
+    C0_POSE__W_based.translation() = C0_translation;
+
+    
+    Eigen::Matrix3d R_C0_to_C1 = Trans.so3().matrix();
+    Eigen::Vector3d t_C0_to_C1 = Trans.translation();
+    cout<< R_C0_to_C1<<endl;
+    cout<< t_C0_to_C1<<endl;
+
+    const static float viz_scaling_factor = 500;
+    Eigen::Isometry3d C1_POSE__C0_based = Eigen::Isometry3d::Identity();
+    C1_POSE__C0_based.rotate(R_C0_to_C1.inverse());
+    C1_POSE__C0_based.translation() = -R_C0_to_C1.inverse()*t_C0_to_C1* viz_scaling_factor; 
+
+
+    Eigen::Isometry3d C1_POSE__W_based = C0_POSE__W_based * C1_POSE__C0_based ;
+
+
+
+    pangolin::CreateWindowAndBind("World Coordinate Frames", 1024, 720);
+    glEnable(GL_DEPTH_TEST);
+
+    // 定义观察相机的投影和初始模型视图矩阵
+    pangolin::OpenGlRenderState s_cam(
+        pangolin::ProjectionMatrix(640, 480, 500, 500, 320, 240, 0.1, 50),
+        pangolin::ModelViewLookAt(4, -4, 3, 0, 0, 0, pangolin::AxisZ)
+    );
+
+    // 创建一个交互式的相机视图
+    pangolin::Handler3D handler(s_cam);
+    pangolin::View& d_cam = pangolin::CreateDisplay()
+        .SetBounds(0.0, 1.0, 0.0, 1.0, -640.0f / 480.0f)
+        .SetHandler(&handler);
+
+
+
+    while (!pangolin::ShouldQuit()) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // 激活相机视图
+        d_cam.Activate(s_cam);
+
+        // 绘制坐标系
+        glLineWidth(4.0); // 设置线宽为3.0，您可以根据需要调整这个值
+        pangolin::glDrawAxis(10.0);
+        glLineWidth(1.0); // 设置线宽为3.0，您可以根据需要调整这个值
+            // 使用预定义的宏颜色绘制三个方向上的网格
+        DrawGrid(0.8, 12, 0, 0.3, 0.3, 0.3); // XY平面
+        DrawGrid(0.8, 12, 1, 0.3, 0.3, 0.3); // XZ平面
+        DrawGrid(0.8, 12, 2, 0.3, 0.3, 0.3); // YZ平面
+
+        
+        
+        DrawCamera(C0_POSE__W_based, 4.0, 4,1);
+        DrawCamera(C1_POSE__W_based, 4.0, 4,0);
+        pangolin::FinishFrame();
+    }        
+}
 
 
 
@@ -142,7 +227,7 @@ void bundleAdjustmentGaussNewton(
                 -fy * P_hat[0] * P_hat[1] * inv_Z_hat_Sq,
                 -fy * P_hat[0] * inv_Z_hat;
 
-            H = J.transpose() * J;
+            H += J.transpose() * J;
             b += -J.transpose() * err;
         }
 
@@ -169,6 +254,7 @@ void bundleAdjustmentGaussNewton(
     }
     cout << "pose by g-n: \n" << Trans.matrix() << endl;
 }
+
 
 
 void getFeaturePointsAndMatch(Mat img1,Mat img2,vector<KeyPoint>& kps1,vector<KeyPoint>& kps2,vector<DMatch>& matches){
@@ -206,4 +292,236 @@ void getFeaturePointsAndMatch(Mat img1,Mat img2,vector<KeyPoint>& kps1,vector<Ke
         }
     }
     matches = matches_new;
+}
+
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+
+
+
+
+/// vertex and edges used in g2o ba
+class VertexTrans : public g2o::BaseVertex<6, Sophus::SE3d> {
+public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+/* ========================================================================================================================= */
+/* ========================================================================================================================= */
+  virtual void setToOriginImpl() override {
+    _estimate = Sophus::SE3d();
+  }
+
+  /// left multiplication on SE3
+  virtual void oplusImpl(const double *update) override {
+    Eigen::Matrix<double, 6, 1> deltaKesai;
+    deltaKesai<< update[0], update[1], update[2], update[3], update[4], update[5];
+    _estimate = Sophus::SE3d::exp(deltaKesai) * _estimate;
+  }
+/* ========================================================================================================================= */
+/* ========================================================================================================================= */
+  virtual bool read(istream &in) override {}
+
+  virtual bool write(ostream &out) const override {}
+};
+
+
+
+
+
+
+
+class EdgeProjection : public g2o::BaseUnaryEdge<2, Eigen::Vector2d, VertexTrans> {
+public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW;
+
+/* ========================================================================================================================= */
+/* ========================================================================================================================= */
+  EdgeProjection(const Eigen::Vector3d &pos, const Eigen::Matrix3d &K) : _pos3d(pos), _K(K) {}
+
+  virtual void computeError() override {
+    const VertexTrans* ptr_VertexTrans = static_cast<VertexTrans *> (_vertices[0]);
+    Sophus::SE3d Trans_est = ptr_VertexTrans->estimate();
+    Eigen::Vector3d pos_pixel = _K * (Trans_est * _pos3d);
+    pos_pixel /= pos_pixel[2];
+    _error = _measurement - pos_pixel.head<2>();
+  }
+
+  virtual void linearizeOplus() override {
+    const VertexTrans* ptr_VertexTrans = static_cast<VertexTrans *> (_vertices[0]);
+    Sophus::SE3d Trans_est = ptr_VertexTrans->estimate();
+    Eigen::Vector3d pos_cam = Trans_est * _pos3d;
+    double fx = _K(0, 0);
+    double fy = _K(1, 1);
+    double cx = _K(0, 2);
+    double cy = _K(1, 2);
+    double X = pos_cam[0];
+    double Y = pos_cam[1];
+    double Z = pos_cam[2];
+    double Z2 = Z * Z;
+    _jacobianOplusXi
+      << -fx / Z, 0, fx * X / Z2, fx * X * Y / Z2, -fx - fx * X * X / Z2, fx * Y / Z,
+      0, -fy / Z, fy * Y / (Z * Z), fy + fy * Y * Y / Z2, -fy * X * Y / Z2, -fy * X / Z;
+  }
+/* ========================================================================================================================= */
+/* ========================================================================================================================= */
+
+  virtual bool read(istream &in) override {}
+
+  virtual bool write(ostream &out) const override {}
+
+private:
+  Eigen::Vector3d _pos3d;
+  Eigen::Matrix3d _K;
+};
+
+
+
+
+
+
+void bundleAdjustmentG2O(
+  const VecVector3d &points_3d,
+  const VecVector2d &points_2d,
+  const Mat &K,
+  Sophus::SE3d &pose) {
+
+  // 构建图优化，先设定g2o
+  typedef g2o::BlockSolver<g2o::BlockSolverTraits<6, 3>> BlockSolverType;  // pose is 6, landmark is 3
+  typedef g2o::LinearSolverDense<BlockSolverType::PoseMatrixType> LinearSolverType; // 线性求解器类型
+  // 梯度下降方法，可以从GN, LM, DogLeg 中选
+  auto solver = new g2o::OptimizationAlgorithmGaussNewton(
+    std::make_unique<BlockSolverType>(std::make_unique<LinearSolverType>()));
+  g2o::SparseOptimizer optimizer;     // 图模型
+  optimizer.setAlgorithm(solver);   // 设置求解器
+  optimizer.setVerbose(true);       // 打开调试输出
+
+  // vertex
+  VertexTrans *vertex_trans = new VertexTrans(); // camera vertex_pose
+  vertex_trans->setId(0);
+  vertex_trans->setEstimate(Sophus::SE3d());
+  optimizer.addVertex(vertex_trans);
+
+  // K
+  Eigen::Matrix3d K_eigen;
+  K_eigen <<
+          K.at<double>(0, 0), K.at<double>(0, 1), K.at<double>(0, 2),
+    K.at<double>(1, 0), K.at<double>(1, 1), K.at<double>(1, 2),
+    K.at<double>(2, 0), K.at<double>(2, 1), K.at<double>(2, 2);
+
+  // edges
+  int index = 1;
+  for (size_t i = 0; i < points_2d.size(); ++i) {
+    auto p2d = points_2d[i];
+    auto p3d = points_3d[i];
+    EdgeProjection *edge = new EdgeProjection(p3d, K_eigen);
+    edge->setId(index);
+    edge->setVertex(0, vertex_trans); // set the ith Vertex The edge connected.
+    edge->setMeasurement(p2d);  // groundTruth 
+    edge->setInformation(Eigen::Matrix2d::Identity());
+    optimizer.addEdge(edge);
+    index++;
+  }
+
+  chrono::steady_clock::time_point t1 = chrono::steady_clock::now();
+  optimizer.setVerbose(true);
+  optimizer.initializeOptimization();
+  optimizer.optimize(10);
+  chrono::steady_clock::time_point t2 = chrono::steady_clock::now();
+  chrono::duration<double> time_used = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
+  cout << "optimization costs time: " << time_used.count() << " seconds." << endl;
+  cout << "pose estimated by g2o =\n" << vertex_trans->estimate().matrix() << endl;
+  pose = vertex_trans->estimate();
+}
+
+
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+/*==    G2O impl   =============================================================================================================================================================================*/
+
+
+
+
+
+void DrawGrid(double grid_size, int num_grid, int plane, double r, double g, double b) {
+        glColor3f(r, g, b);
+        glBegin(GL_LINES);
+        for (int i = -num_grid; i <= num_grid; ++i) {
+            double position = grid_size * i;
+            if (plane == 0) { // XY plane
+                glVertex3f(position, -num_grid * grid_size, 0);
+                glVertex3f(position, num_grid * grid_size, 0);
+                glVertex3f(-num_grid * grid_size, position, 0);
+                glVertex3f(num_grid * grid_size, position, 0);
+            } else if (plane == 1) { // XZ plane
+                glVertex3f(position, 0, -num_grid * grid_size);
+                glVertex3f(position, 0, num_grid * grid_size);
+                glVertex3f(-num_grid * grid_size, 0, position);
+                glVertex3f(num_grid * grid_size, 0, position);
+            } else if (plane == 2) { // YZ plane
+                glVertex3f(0, position, -num_grid * grid_size);
+                glVertex3f(0, position, num_grid * grid_size);
+                glVertex3f(0, -num_grid * grid_size, position);
+                glVertex3f(0, num_grid * grid_size, position);
+            }
+        }
+        glEnd();
+}
+
+
+
+
+void DrawCamera(const Eigen::Isometry3d& T, float lineWidth, float size,bool isDashed) {
+    glPushMatrix();
+    glMultMatrixd(T.data());
+    glLineWidth(lineWidth);
+
+    if (isDashed) {
+        // 启用stipple模式
+        glEnable(GL_LINE_STIPPLE);
+        // 设置虚线模式 (0x00FF表示将绘制一个短线段,然后跳过一个短线段)
+        glLineStipple(1, 0x00FF);
+    }
+
+    glBegin(GL_LINES);
+    // 绘制相机坐标系的XYZ轴
+    glColor3f(1.0, 0.0, 0.0); // X轴为红色
+    glVertex3f(0.0, 0.0, 0.0);
+    glVertex3f(size, 0.0, 0.0);
+    glColor3f(0.0, 1.0, 0.0); // Y轴为绿色
+    glVertex3f(0.0, 0.0, 0.0);
+    glVertex3f(0.0, size, 0.0);
+    glColor3f(0.0, 0.0, 1.0); // Z轴为蓝色
+    glVertex3f(0.0, 0.0, 0.0);
+    glVertex3f(0.0, 0.0, size);
+    glEnd();
+
+    if (isDashed) {
+        // 禁用stipple模式
+        glDisable(GL_LINE_STIPPLE);
+    }
+    glPopMatrix();
 }

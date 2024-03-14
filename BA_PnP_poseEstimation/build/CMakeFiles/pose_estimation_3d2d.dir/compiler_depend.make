@@ -452,24 +452,15 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
   /usr/include/eigen3/Eigen/src/Core/StlIterators.h \
   /usr/include/eigen3/Eigen/src/Core/GlobalFunctions.h \
   /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h \
-  /usr/local/include/g2o/core/base_vertex.h \
-  /usr/include/eigen3/Eigen/Cholesky \
+  /usr/include/eigen3/Eigen/Geometry \
   /usr/include/eigen3/Eigen/Core \
+  /usr/include/eigen3/Eigen/SVD \
+  /usr/include/eigen3/Eigen/QR \
+  /usr/include/eigen3/Eigen/Cholesky \
   /usr/include/eigen3/Eigen/Jacobi \
   /usr/include/eigen3/Eigen/src/Jacobi/Jacobi.h \
   /usr/include/eigen3/Eigen/src/Cholesky/LLT.h \
   /usr/include/eigen3/Eigen/src/Cholesky/LDLT.h \
-  /usr/include/eigen3/Eigen/Dense \
-  /usr/include/eigen3/Eigen/LU \
-  /usr/include/eigen3/Eigen/src/misc/Kernel.h \
-  /usr/include/eigen3/Eigen/src/misc/Image.h \
-  /usr/include/eigen3/Eigen/src/LU/FullPivLU.h \
-  /usr/include/eigen3/Eigen/src/LU/PartialPivLU.h \
-  /usr/include/eigen3/Eigen/src/LU/Determinant.h \
-  /usr/include/eigen3/Eigen/src/LU/InverseImpl.h \
-  /usr/include/eigen3/Eigen/src/LU/arch/InverseSize4.h \
-  /usr/include/eigen3/Eigen/Cholesky \
-  /usr/include/eigen3/Eigen/QR \
   /usr/include/eigen3/Eigen/Householder \
   /usr/include/eigen3/Eigen/src/Householder/Householder.h \
   /usr/include/eigen3/Eigen/src/Householder/HouseholderSequence.h \
@@ -478,13 +469,19 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
   /usr/include/eigen3/Eigen/src/QR/FullPivHouseholderQR.h \
   /usr/include/eigen3/Eigen/src/QR/ColPivHouseholderQR.h \
   /usr/include/eigen3/Eigen/src/QR/CompleteOrthogonalDecomposition.h \
-  /usr/include/eigen3/Eigen/SVD \
   /usr/include/eigen3/Eigen/src/misc/RealSvd2x2.h \
   /usr/include/eigen3/Eigen/src/SVD/UpperBidiagonalization.h \
   /usr/include/eigen3/Eigen/src/SVD/SVDBase.h \
   /usr/include/eigen3/Eigen/src/SVD/JacobiSVD.h \
   /usr/include/eigen3/Eigen/src/SVD/BDCSVD.h \
-  /usr/include/eigen3/Eigen/Geometry \
+  /usr/include/eigen3/Eigen/LU \
+  /usr/include/eigen3/Eigen/src/misc/Kernel.h \
+  /usr/include/eigen3/Eigen/src/misc/Image.h \
+  /usr/include/eigen3/Eigen/src/LU/FullPivLU.h \
+  /usr/include/eigen3/Eigen/src/LU/PartialPivLU.h \
+  /usr/include/eigen3/Eigen/src/LU/Determinant.h \
+  /usr/include/eigen3/Eigen/src/LU/InverseImpl.h \
+  /usr/include/eigen3/Eigen/src/LU/arch/InverseSize4.h \
   /usr/include/eigen3/Eigen/src/Geometry/OrthoMethods.h \
   /usr/include/eigen3/Eigen/src/Geometry/EulerAngles.h \
   /usr/include/eigen3/Eigen/src/Geometry/Homogeneous.h \
@@ -500,6 +497,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
   /usr/include/eigen3/Eigen/src/Geometry/AlignedBox.h \
   /usr/include/eigen3/Eigen/src/Geometry/Umeyama.h \
   /usr/include/eigen3/Eigen/src/Geometry/arch/Geometry_SIMD.h \
+  /usr/include/eigen3/Eigen/Dense \
+  /usr/include/eigen3/Eigen/Geometry \
   /usr/include/eigen3/Eigen/Eigenvalues \
   /usr/include/eigen3/Eigen/src/Eigenvalues/Tridiagonalization.h \
   /usr/include/eigen3/Eigen/src/Eigenvalues/RealSchur.h \
@@ -517,6 +516,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
   /usr/include/eigen3/Eigen/src/Eigenvalues/GeneralizedEigenSolver.h \
   /usr/include/eigen3/Eigen/src/Eigenvalues/RealQZ.h \
   /usr/include/eigen3/Eigen/src/Eigenvalues/MatrixBaseEigenvalues.h \
+  /usr/local/include/g2o/core/base_vertex.h \
+  /usr/include/eigen3/Eigen/Cholesky \
   /usr/include/c++/11/stack \
   /usr/include/c++/11/deque \
   /usr/include/c++/11/bits/stl_deque.h \
@@ -535,7 +536,6 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
   /usr/local/include/g2o/core/io_helper.h \
   /usr/local/include/g2o/core/jacobian_workspace.h \
   /usr/local/include/g2o/core/eigen_types.h \
-  /usr/include/eigen3/Eigen/Geometry \
   /usr/local/include/g2o/core/openmp_mutex.h \
   /usr/local/include/g2o/core/parameter.h \
   /usr/local/include/g2o/core/parameter_container.h \
@@ -619,8 +619,184 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
   /usr/local/include/sophus/so2.hpp \
   /usr/include/eigen3/Eigen/src/Geometry/OrthoMethods.h \
   /usr/include/eigen3/Eigen/src/Geometry/Quaternion.h \
-  /usr/include/eigen3/Eigen/src/Geometry/RotationBase.h
+  /usr/include/eigen3/Eigen/src/Geometry/RotationBase.h \
+  /usr/local/include/pangolin/pangolin.h \
+  /usr/local/include/pangolin/platform.h \
+  /usr/local/include/pangolin/utils/assert.h \
+  /usr/local/include/pangolin/utils/format_string.h \
+  /usr/local/include/pangolin/utils/log.h \
+  /usr/local/include/pangolin/display/display.h \
+  /usr/local/include/pangolin/gl/glinclude.h \
+  /usr/local/include/pangolin/gl/glplatform.h \
+  /usr/include/GL/glew.h \
+  /usr/include/GL/glu.h \
+  /usr/include/GL/gl.h \
+  /usr/local/include/pangolin/gl/glpangoglu.h \
+  /usr/local/include/pangolin/gl/viewport.h \
+  /usr/local/include/pangolin/utils/params.h \
+  /usr/local/include/pangolin/utils/type_convert.h \
+  /usr/local/include/pangolin/compat/type_traits.h \
+  /usr/local/include/pangolin/windowing/window.h \
+  /usr/local/include/pangolin/utils/signal_slot.h \
+  /usr/local/include/sigslot/signal.hpp \
+  /usr/include/c++/11/thread \
+  /usr/include/c++/11/bits/std_thread.h \
+  /usr/include/c++/11/bits/this_thread_sleep.h \
+  /usr/local/include/pangolin/utils/true_false_toggle.h \
+  /usr/local/include/pangolin/utils/uri.h \
+  /usr/local/include/pangolin/windowing/handler_bitsets.h \
+  /usr/local/include/pangolin/utils/bitmask.h \
+  /usr/local/include/pangolin/windowing/handler_enums.h \
+  /usr/local/include/pangolin/display/display.hpp \
+  /usr/local/include/pangolin/display/view.h \
+  /usr/local/include/pangolin/display/attach.h \
+  /usr/local/include/pangolin/display/widgets.h \
+  /usr/local/include/pangolin/var/var.h \
+  /usr/local/include/pangolin/utils/is_streamable.h \
+  /usr/local/include/pangolin/var/varvalue.h \
+  /usr/local/include/pangolin/var/varvaluet.h \
+  /usr/local/include/pangolin/var/varvaluegeneric.h \
+  /usr/local/include/pangolin/utils/file_utils.h \
+  /usr/local/include/pangolin/var/varwrapper.h \
+  /usr/local/include/pangolin/var/varstate.h \
+  /usr/include/c++/11/any \
+  /usr/local/include/pangolin/var/varinit.h \
+  /usr/local/include/pangolin/handler/handler.h \
+  /usr/local/include/pangolin/gl/opengl_render_state.h \
+  /usr/local/include/pangolin/utils/simple_math.h \
+  /usr/local/include/pangolin/gl/gl.h \
+  /usr/local/include/pangolin/image/image_io.h \
+  /usr/local/include/pangolin/image/typed_image.h \
+  /usr/local/include/pangolin/image/managed_image.h \
+  /usr/local/include/pangolin/image/image.h \
+  /usr/local/include/pangolin/image/memcpy.h \
+  /usr/local/include/pangolin/image/copy.h \
+  /usr/local/include/pangolin/image/pixel_format.h \
+  /usr/local/include/pangolin/utils/file_extension.h \
+  /usr/include/c++/11/math.h \
+  /usr/local/include/pangolin/gl/gl.hpp \
+  /usr/local/include/pangolin/gl/glpixformat.h \
+  /usr/local/include/pangolin/gl/glformattraits.h \
+  /usr/local/include/pangolin/gl/glfont.h \
+  /usr/local/include/pangolin/gl/gltext.h \
+  /usr/local/include/pangolin/gl/glchar.h \
+  /usr/include/c++/11/cstdarg \
+  /usr/local/include/pangolin/gl/colour.h \
+  /usr/local/include/pangolin/gl/gldraw.h \
+  /usr/local/include/pangolin/gl/glstate.h \
+  /usr/local/include/pangolin/gl/glvbo.h \
+  /usr/local/include/pangolin/plot/plotter.h \
+  /usr/local/include/pangolin/gl/glsl.h \
+  /usr/local/include/pangolin/gl/glsl.hpp \
+  /usr/local/include/pangolin/utils/range.h \
+  /usr/local/include/pangolin/plot/datalog.h \
+  /usr/local/include/pangolin/var/varextra.h \
+  /usr/local/include/pangolin/video/video.h \
+  /usr/local/include/pangolin/video/video_exception.h \
+  /usr/local/include/pangolin/video/video_interface.h \
+  /usr/local/include/pangolin/utils/picojson.h \
+  /usr/include/inttypes.h \
+  /usr/local/include/pangolin/video/stream_info.h \
+  /usr/local/include/pangolin/video/video_output_interface.h \
+  /usr/local/include/pangolin/video/video_input.h \
+  /usr/local/include/pangolin/video/video_output.h
 
+
+/usr/local/include/pangolin/video/video_output_interface.h:
+
+/usr/local/include/pangolin/video/stream_info.h:
+
+/usr/include/inttypes.h:
+
+/usr/local/include/pangolin/video/video_exception.h:
+
+/usr/local/include/pangolin/video/video.h:
+
+/usr/local/include/pangolin/var/varextra.h:
+
+/usr/local/include/pangolin/plot/datalog.h:
+
+/usr/local/include/pangolin/utils/range.h:
+
+/usr/local/include/pangolin/plot/plotter.h:
+
+/usr/local/include/pangolin/gl/glvbo.h:
+
+/usr/local/include/pangolin/gl/colour.h:
+
+/usr/local/include/pangolin/gl/glchar.h:
+
+/usr/local/include/pangolin/gl/glfont.h:
+
+/usr/local/include/pangolin/gl/glpixformat.h:
+
+/usr/local/include/pangolin/utils/file_extension.h:
+
+/usr/local/include/pangolin/image/pixel_format.h:
+
+/usr/local/include/pangolin/image/memcpy.h:
+
+/usr/local/include/pangolin/image/image.h:
+
+/usr/local/include/pangolin/image/managed_image.h:
+
+/usr/local/include/pangolin/gl/gl.h:
+
+/usr/local/include/pangolin/gl/opengl_render_state.h:
+
+/usr/local/include/pangolin/handler/handler.h:
+
+/usr/include/c++/11/any:
+
+/usr/local/include/pangolin/var/varstate.h:
+
+/usr/local/include/pangolin/var/varwrapper.h:
+
+/usr/local/include/pangolin/utils/file_utils.h:
+
+/usr/local/include/pangolin/video/video_output.h:
+
+/usr/local/include/pangolin/var/varvaluegeneric.h:
+
+/usr/local/include/pangolin/display/widgets.h:
+
+/usr/local/include/pangolin/display/attach.h:
+
+/usr/local/include/pangolin/display/view.h:
+
+/usr/local/include/pangolin/windowing/handler_enums.h:
+
+/usr/local/include/pangolin/utils/bitmask.h:
+
+/usr/local/include/pangolin/windowing/handler_bitsets.h:
+
+/usr/include/c++/11/bits/this_thread_sleep.h:
+
+/usr/include/c++/11/bits/std_thread.h:
+
+/usr/include/c++/11/thread:
+
+/usr/local/include/pangolin/utils/uri.h:
+
+/usr/local/include/pangolin/utils/signal_slot.h:
+
+/usr/local/include/pangolin/utils/params.h:
+
+/usr/local/include/pangolin/gl/glpangoglu.h:
+
+/usr/include/GL/glu.h:
+
+/usr/include/GL/glew.h:
+
+/usr/local/include/pangolin/gl/glplatform.h:
+
+/usr/local/include/pangolin/utils/log.h:
+
+/usr/local/include/pangolin/utils/format_string.h:
+
+/usr/local/include/pangolin/utils/assert.h:
+
+/usr/local/include/pangolin/pangolin.h:
 
 /usr/local/include/sophus/so2.hpp:
 
@@ -635,6 +811,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 /usr/local/include/fmt/format.h:
 
 /usr/include/c++/11/bits/stl_numeric.h:
+
+/usr/local/include/pangolin/windowing/window.h:
 
 /usr/include/c++/11/numeric:
 
@@ -662,6 +840,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 
 /usr/local/include/g2o/core/block_solver.h:
 
+/usr/local/include/pangolin/gl/glsl.h:
+
 /usr/local/include/g2o/core/sparse_block_matrix.hpp:
 
 /usr/local/include/g2o/core/matrix_structure.h:
@@ -671,6 +851,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 /usr/local/include/g2o/stuff/sparse_helper.h:
 
 /usr/include/c++/11/bits/quoted_string.h:
+
+/usr/local/include/pangolin/var/var.h:
 
 /usr/include/c++/11/bits/locale_facets_nonio.tcc:
 
@@ -690,11 +872,15 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 
 /usr/local/include/g2o/core/sparse_optimizer.h:
 
+/usr/local/include/pangolin/display/display.h:
+
 /usr/include/c++/11/array:
 
 /usr/include/c++/11/bits/specfun.h:
 
 /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h:
+
+/usr/include/GL/gl.h:
 
 /usr/include/c++/11/bits/postypes.h:
 
@@ -704,9 +890,13 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 
 /usr/include/c++/11/string_view:
 
+/usr/local/include/pangolin/gl/glformattraits.h:
+
 /usr/include/eigen3/Eigen/src/LU/Determinant.h:
 
 /usr/include/string.h:
+
+/usr/local/include/pangolin/utils/type_convert.h:
 
 /usr/include/c++/11/bits/vector.tcc:
 
@@ -725,6 +915,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 /usr/local/include/g2o/core/sparse_block_matrix_ccs.h:
 
 /usr/include/c++/11/vector:
+
+/usr/local/include/pangolin/display/display.hpp:
 
 /usr/include/c++/11/bits/erase_if.h:
 
@@ -788,6 +980,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 
 /usr/local/include/opencv4/opencv2/core/base.hpp:
 
+/usr/local/include/pangolin/utils/is_streamable.h:
+
 /usr/include/c++/11/stdlib.h:
 
 /usr/include/eigen3/Eigen/src/Core/CwiseUnaryView.h:
@@ -797,6 +991,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 /usr/local/include/opencv4/opencv2/core/cv_cpu_dispatch.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/xmmintrin.h:
+
+/usr/local/include/pangolin/platform.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/emmintrin.h:
 
@@ -846,6 +1042,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 
 /usr/include/c++/11/bits/node_handle.h:
 
+/usr/local/include/pangolin/gl/glstate.h:
+
 /usr/include/c++/11/bits/basic_string.tcc:
 
 /usr/include/eigen3/Eigen/src/Core/StableNorm.h:
@@ -853,6 +1051,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/error_t.h:
+
+/usr/include/c++/11/math.h:
 
 /usr/include/eigen3/Eigen/Eigenvalues:
 
@@ -901,6 +1101,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 /usr/include/c++/11/bits/locale_classes.tcc:
 
 /usr/include/c++/11/ext/aligned_buffer.h:
+
+/usr/local/include/pangolin/var/varinit.h:
 
 /usr/include/eigen3/Eigen/src/Core/SolveTriangular.h:
 
@@ -1000,6 +1202,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h:
 
+/usr/local/include/pangolin/gl/glsl.hpp:
+
 /usr/include/c++/11/cwchar:
 
 /usr/include/x86_64-linux-gnu/bits/types/mbstate_t.h:
@@ -1007,6 +1211,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 /usr/include/x86_64-linux-gnu/bits/long-double.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__sigset_t.h:
+
+/usr/local/include/pangolin/gl/glinclude.h:
 
 /usr/include/eigen3/Eigen/src/Core/Product.h:
 
@@ -1041,6 +1247,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 /usr/include/c++/11/system_error:
 
 /usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
+
+/usr/local/include/pangolin/image/image_io.h:
 
 /usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
@@ -1080,7 +1288,11 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 
 /usr/include/c++/11/ext/numeric_traits.h:
 
+/usr/local/include/pangolin/gl/gl.hpp:
+
 /usr/include/c++/11/ext/type_traits.h:
+
+/usr/local/include/pangolin/var/varvalue.h:
 
 /usr/lib/gcc/x86_64-linux-gnu/11/include/mm_malloc.h:
 
@@ -1158,6 +1370,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 
 /usr/include/c++/11/ext/alloc_traits.h:
 
+/usr/local/include/pangolin/utils/true_false_toggle.h:
+
 /usr/include/c++/11/bits/unordered_map.h:
 
 /usr/local/include/g2o/core/marginal_covariance_cholesky.h:
@@ -1167,6 +1381,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 /usr/local/include/opencv4/opencv2/core/bufferpool.hpp:
 
 /usr/include/eigen3/Eigen/src/Core/products/TriangularMatrixMatrix.h:
+
+/usr/include/c++/11/cstdarg:
 
 /usr/include/x86_64-linux-gnu/bits/types/struct_FILE.h:
 
@@ -1191,6 +1407,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 /usr/local/include/g2o/autodiff/memory.h:
 
 /usr/include/c++/11/cctype:
+
+/usr/local/include/pangolin/video/video_interface.h:
 
 /usr/include/eigen3/Eigen/src/Core/util/XprHelper.h:
 
@@ -1404,6 +1622,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 
 /usr/include/c++/11/mutex:
 
+/usr/local/include/pangolin/gl/viewport.h:
+
 /usr/include/c++/11/bits/ostream.tcc:
 
 /usr/include/eigen3/Eigen/src/Core/util/ForwardDeclarations.h:
@@ -1556,6 +1776,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 
 /usr/include/eigen3/Eigen/src/Core/Matrix.h:
 
+/usr/local/include/pangolin/gl/gldraw.h:
+
 /usr/local/include/g2o/core/linear_solver.h:
 
 /usr/include/eigen3/Eigen/src/Core/MatrixBase.h:
@@ -1575,6 +1797,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 /usr/include/eigen3/Eigen/src/plugins/ArrayCwiseUnaryOps.h:
 
 /usr/include/eigen3/Eigen/src/Core/DenseStorage.h:
+
+/usr/local/include/pangolin/image/copy.h:
 
 /usr/local/include/opencv4/opencv2/core/vsx_utils.hpp:
 
@@ -1668,6 +1892,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 
 /usr/include/eigen3/Eigen/src/Core/CoreIterators.h:
 
+/usr/local/include/pangolin/gl/gltext.h:
+
 /usr/include/x86_64-linux-gnu/bits/timex.h:
 
 /usr/include/eigen3/Eigen/src/Core/arch/Default/ConjHelper.h:
@@ -1682,11 +1908,15 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 
 /usr/include/eigen3/Eigen/src/Core/Reverse.h:
 
+/usr/local/include/pangolin/utils/picojson.h:
+
 /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h:
 
 /usr/include/eigen3/Eigen/src/Core/ArrayWrapper.h:
 
 /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h:
+
+/usr/local/include/sigslot/signal.hpp:
 
 /usr/include/c++/11/bits/invoke.h:
 
@@ -1697,14 +1927,6 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 /usr/include/c++/11/bits/uniform_int_dist.h:
 
 /usr/include/eigen3/Eigen/src/Cholesky/LLT.h:
-
-/usr/include/eigen3/Eigen/Dense:
-
-/usr/include/eigen3/Eigen/src/misc/Kernel.h:
-
-/usr/include/eigen3/Eigen/src/Core/products/Parallelizer.h:
-
-/usr/include/eigen3/Eigen/src/LU/InverseImpl.h:
 
 /usr/include/eigen3/Eigen/src/Householder/Householder.h:
 
@@ -1728,15 +1950,25 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 
 /usr/include/eigen3/Eigen/src/SVD/BDCSVD.h:
 
+/usr/include/eigen3/Eigen/src/misc/Kernel.h:
+
+/usr/include/eigen3/Eigen/src/Core/products/Parallelizer.h:
+
+/usr/include/eigen3/Eigen/src/LU/InverseImpl.h:
+
 /usr/include/eigen3/Eigen/src/Geometry/OrthoMethods.h:
 
 /usr/include/eigen3/Eigen/src/Geometry/EulerAngles.h:
 
 /usr/include/eigen3/Eigen/src/Geometry/Homogeneous.h:
 
+/usr/local/include/pangolin/var/varvaluet.h:
+
 /usr/include/eigen3/Eigen/src/Geometry/Quaternion.h:
 
 /usr/include/eigen3/Eigen/src/Geometry/Scaling.h:
+
+/usr/local/include/pangolin/utils/simple_math.h:
 
 /usr/include/features.h:
 
@@ -1756,9 +1988,13 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 
 /usr/include/eigen3/Eigen/src/Geometry/arch/Geometry_SIMD.h:
 
+/usr/include/eigen3/Eigen/Dense:
+
 /usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
 
 /usr/include/eigen3/Eigen/src/Eigenvalues/EigenSolver.h:
+
+/usr/local/include/pangolin/image/typed_image.h:
 
 /usr/include/eigen3/Eigen/src/Eigenvalues/ComplexEigenSolver.h:
 
@@ -1773,6 +2009,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 /usr/include/c++/11/deque:
 
 /usr/include/c++/11/bits/deque.tcc:
+
+/usr/local/include/pangolin/video/video_input.h:
 
 /usr/include/c++/11/bits/stl_stack.h:
 
@@ -1809,6 +2047,8 @@ CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o: ../pose_estimati
 /usr/include/c++/11/string:
 
 /usr/local/include/g2o/core/base_edge.h:
+
+/usr/local/include/pangolin/compat/type_traits.h:
 
 /usr/include/eigen3/Eigen/src/Core/arch/Default/Half.h:
 
