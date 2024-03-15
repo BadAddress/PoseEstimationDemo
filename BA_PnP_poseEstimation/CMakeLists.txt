@@ -24,6 +24,16 @@ include_directories("/usr/local/include/eigen3")
 
 # 添加可执行文件
 add_executable(pose_estimation_3d2d pose_estimation_3d2d.cpp)
-
 # 链接库
 target_link_libraries(pose_estimation_3d2d ${CERES_LIBRARIES} ${Pangolin_LIBRARIES} ${OpenCV_LIBS} ${Sophus_INCLUDE_DIRS} fmt::fmt g2o_core g2o_stuff)
+
+
+
+add_executable(pose_estimation_3d3d pose_estimation_3d2d.cpp)
+target_link_libraries(pose_estimation_3d3d ${CERES_LIBRARIES} ${Pangolin_LIBRARIES} ${OpenCV_LIBS} ${Sophus_INCLUDE_DIRS} fmt::fmt g2o_core g2o_stuff)
+
+
+# 添加可执行文件
+add_executable(direct_method direct_method.cpp)
+# 链接库
+target_link_libraries(direct_method ${CERES_LIBRARIES} ${Pangolin_LIBRARIES} ${OpenCV_LIBS} ${Sophus_INCLUDE_DIRS} fmt::fmt g2o_core g2o_stuff)

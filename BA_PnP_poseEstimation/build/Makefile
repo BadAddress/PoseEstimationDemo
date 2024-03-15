@@ -129,12 +129,63 @@ pose_estimation_3d2d/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pose_estimation_3d2d.dir/build.make CMakeFiles/pose_estimation_3d2d.dir/build
 .PHONY : pose_estimation_3d2d/fast
 
+#=============================================================================
+# Target rules for targets named pose_estimation_3d3d
+
+# Build rule for target.
+pose_estimation_3d3d: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 pose_estimation_3d3d
+.PHONY : pose_estimation_3d3d
+
+# fast build rule for target.
+pose_estimation_3d3d/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pose_estimation_3d3d.dir/build.make CMakeFiles/pose_estimation_3d3d.dir/build
+.PHONY : pose_estimation_3d3d/fast
+
+#=============================================================================
+# Target rules for targets named direct_method
+
+# Build rule for target.
+direct_method: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 direct_method
+.PHONY : direct_method
+
+# fast build rule for target.
+direct_method/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/direct_method.dir/build.make CMakeFiles/direct_method.dir/build
+.PHONY : direct_method/fast
+
+direct_method.o: direct_method.cpp.o
+.PHONY : direct_method.o
+
+# target to build an object file
+direct_method.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/direct_method.dir/build.make CMakeFiles/direct_method.dir/direct_method.cpp.o
+.PHONY : direct_method.cpp.o
+
+direct_method.i: direct_method.cpp.i
+.PHONY : direct_method.i
+
+# target to preprocess a source file
+direct_method.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/direct_method.dir/build.make CMakeFiles/direct_method.dir/direct_method.cpp.i
+.PHONY : direct_method.cpp.i
+
+direct_method.s: direct_method.cpp.s
+.PHONY : direct_method.s
+
+# target to generate assembly for a file
+direct_method.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/direct_method.dir/build.make CMakeFiles/direct_method.dir/direct_method.cpp.s
+.PHONY : direct_method.cpp.s
+
 pose_estimation_3d2d.o: pose_estimation_3d2d.cpp.o
 .PHONY : pose_estimation_3d2d.o
 
 # target to build an object file
 pose_estimation_3d2d.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pose_estimation_3d2d.dir/build.make CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pose_estimation_3d3d.dir/build.make CMakeFiles/pose_estimation_3d3d.dir/pose_estimation_3d2d.cpp.o
 .PHONY : pose_estimation_3d2d.cpp.o
 
 pose_estimation_3d2d.i: pose_estimation_3d2d.cpp.i
@@ -143,6 +194,7 @@ pose_estimation_3d2d.i: pose_estimation_3d2d.cpp.i
 # target to preprocess a source file
 pose_estimation_3d2d.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pose_estimation_3d2d.dir/build.make CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pose_estimation_3d3d.dir/build.make CMakeFiles/pose_estimation_3d3d.dir/pose_estimation_3d2d.cpp.i
 .PHONY : pose_estimation_3d2d.cpp.i
 
 pose_estimation_3d2d.s: pose_estimation_3d2d.cpp.s
@@ -151,6 +203,7 @@ pose_estimation_3d2d.s: pose_estimation_3d2d.cpp.s
 # target to generate assembly for a file
 pose_estimation_3d2d.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pose_estimation_3d2d.dir/build.make CMakeFiles/pose_estimation_3d2d.dir/pose_estimation_3d2d.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pose_estimation_3d3d.dir/build.make CMakeFiles/pose_estimation_3d3d.dir/pose_estimation_3d2d.cpp.s
 .PHONY : pose_estimation_3d2d.cpp.s
 
 # Help Target
@@ -161,7 +214,12 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... direct_method"
 	@echo "... pose_estimation_3d2d"
+	@echo "... pose_estimation_3d3d"
+	@echo "... direct_method.o"
+	@echo "... direct_method.i"
+	@echo "... direct_method.s"
 	@echo "... pose_estimation_3d2d.o"
 	@echo "... pose_estimation_3d2d.i"
 	@echo "... pose_estimation_3d2d.s"
