@@ -65,11 +65,11 @@ int main(){
     vector<cv::DMatch> matches;
     getFeaturePointsAndMatch(img_1,img_2,kps1,kps2,matches);
 
-    vector<cv::Point3f> pts_1_3d;
+    vector<cv::Point3f> Pts_3d_cam1_based;
     vector<cv::Point2f> pts_2_pixel;
 
     for (DMatch m:matches) {
-        auto depth = d1.at<ushort>( cvRound(kps2[m.queryIdx].pt.y) ,  cvRound(kps1[m.queryIdx].pt.x) ); 
+        auto depth = d1.at<ushort>( cvRound(kps1[m.queryIdx].pt.y) ,  cvRound(kps1[m.queryIdx].pt.x) ); 
         
         if (depth == 0) continue;
 
@@ -82,21 +82,21 @@ int main(){
          >> scaled  camera coordinate     =>     (1/s) * [  X_norm * Depth  ,   Y_norm * Depth   ,  Depth  ]  
         */
         const static float scaling_factor = 5000.0;
-        pts_1_3d.push_back(Point3f(p1_camNorm.x*depth/scaling_factor, p1_camNorm.y*depth/scaling_factor, depth/scaling_factor));
+        Pts_3d_cam1_based.push_back(Point3f(p1_camNorm.x*depth/scaling_factor, p1_camNorm.y*depth/scaling_factor, depth/scaling_factor));
         pts_2_pixel.push_back(kps2[m.trainIdx].pt);
     } 
 
-    VecVector3d pts_1_3d_eigen;
+    VecVector3d Pts_3d_cam1_based_eigen;
     VecVector2d pts_2_pixel_eigen;
-    for (size_t i = 0; i < pts_1_3d.size(); ++i) {
-        pts_1_3d_eigen.push_back(Eigen::Vector3d(pts_1_3d[i].x, pts_1_3d[i].y, pts_1_3d[i].z));
+    for (size_t i = 0; i < Pts_3d_cam1_based.size(); ++i) {
+        Pts_3d_cam1_based_eigen.push_back(Eigen::Vector3d(Pts_3d_cam1_based[i].x, Pts_3d_cam1_based[i].y, Pts_3d_cam1_based[i].z));
         pts_2_pixel_eigen.push_back(Eigen::Vector2d(pts_2_pixel[i].x, pts_2_pixel[i].y));
     }
 
 
     Sophus::SE3d Trans;
-    // bundleAdjustmentGaussNewton(pts_1_3d_eigen,pts_2_pixel_eigen,K,Trans);
-    bundleAdjustmentG2O(pts_1_3d_eigen,pts_2_pixel_eigen,K,Trans);
+    bundleAdjustmentGaussNewton(Pts_3d_cam1_based_eigen,pts_2_pixel_eigen,K,Trans);
+    bundleAdjustmentG2O(Pts_3d_cam1_based_eigen,pts_2_pixel_eigen,K,Trans);
 
 
 /*========= VISUALIZE PART ===============================================================================================================================*/
@@ -109,7 +109,7 @@ int main(){
     R_W_to_C0 << 1, 0,  0,
                  0, 0, -1,
                  0, 1,  0;
-    Eigen::Vector3d C0_translation = Eigen::Vector3d(3,3,3);
+    Eigen::Vector3d C0_translation = Eigen::Vector3d(7,7,7);
     C0_POSE__W_based.rotate(R_W_to_C0.inverse());
     C0_POSE__W_based.translation() = C0_translation;
 
@@ -119,7 +119,7 @@ int main(){
     cout<< R_C0_to_C1<<endl;
     cout<< t_C0_to_C1<<endl;
 
-    const static float viz_scaling_factor = 500;
+    const static float viz_scaling_factor = 100;
     Eigen::Isometry3d C1_POSE__C0_based = Eigen::Isometry3d::Identity();
     C1_POSE__C0_based.rotate(R_C0_to_C1.inverse());
     C1_POSE__C0_based.translation() = -R_C0_to_C1.inverse()*t_C0_to_C1* viz_scaling_factor; 
@@ -403,6 +403,7 @@ void bundleAdjustmentG2O(
   // 梯度下降方法，可以从GN, LM, DogLeg 中选
   auto solver = new g2o::OptimizationAlgorithmGaussNewton(
     std::make_unique<BlockSolverType>(std::make_unique<LinearSolverType>()));
+ 
   g2o::SparseOptimizer optimizer;     // 图模型
   optimizer.setAlgorithm(solver);   // 设置求解器
   optimizer.setVerbose(true);       // 打开调试输出

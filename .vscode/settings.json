@@ -68,6 +68,7 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "core": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "valarray": "cpp"
     }
 }

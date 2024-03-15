@@ -1,4 +1,4 @@
-# Install script for directory: /home/bl/Desktop/PoseEstimation/BA_PnP_poseEstimation
+# Install script for directory: /home/bl/Desktop/PoseEstimationDemo/BA_PnP_poseEstimation
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/bl/Desktop/PoseEstimation/BA_PnP_poseEstimation/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/bl/Desktop/PoseEstimationDemo/BA_PnP_poseEstimation/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
