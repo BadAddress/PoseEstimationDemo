@@ -618,4 +618,6 @@ CMakeFiles/direct_method.dir/direct_method.cpp.o: \
  /usr/local/include/pangolin/video/stream_info.h \
  /usr/local/include/pangolin/video/video_output_interface.h \
  /usr/local/include/pangolin/video/video_input.h \
- /usr/local/include/pangolin/video/video_output.h
+ /usr/local/include/pangolin/video/video_output.h \
+ /usr/local/include/opencv4/opencv2/imgproc.hpp \
+ /usr/local/include/opencv4/opencv2/imgproc/segmentation.hpp

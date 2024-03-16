@@ -63,8 +63,6 @@ CMAKE_BINARY_DIR = /home/bl/Desktop/PoseEstimationDemo/BA_PnP_poseEstimation/bui
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/pose_estimation_3d2d.dir/all
-all: CMakeFiles/pose_estimation_3d3d.dir/all
 all: CMakeFiles/direct_method.dir/all
 .PHONY : all
 
@@ -73,62 +71,8 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/pose_estimation_3d2d.dir/clean
-clean: CMakeFiles/pose_estimation_3d3d.dir/clean
 clean: CMakeFiles/direct_method.dir/clean
 .PHONY : clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/pose_estimation_3d2d.dir
-
-# All Build rule for target.
-CMakeFiles/pose_estimation_3d2d.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pose_estimation_3d2d.dir/build.make CMakeFiles/pose_estimation_3d2d.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pose_estimation_3d2d.dir/build.make CMakeFiles/pose_estimation_3d2d.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/bl/Desktop/PoseEstimationDemo/BA_PnP_poseEstimation/build/CMakeFiles --progress-num=3,4 "Built target pose_estimation_3d2d"
-.PHONY : CMakeFiles/pose_estimation_3d2d.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/pose_estimation_3d2d.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/bl/Desktop/PoseEstimationDemo/BA_PnP_poseEstimation/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/pose_estimation_3d2d.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/bl/Desktop/PoseEstimationDemo/BA_PnP_poseEstimation/build/CMakeFiles 0
-.PHONY : CMakeFiles/pose_estimation_3d2d.dir/rule
-
-# Convenience name for target.
-pose_estimation_3d2d: CMakeFiles/pose_estimation_3d2d.dir/rule
-.PHONY : pose_estimation_3d2d
-
-# clean rule for target.
-CMakeFiles/pose_estimation_3d2d.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pose_estimation_3d2d.dir/build.make CMakeFiles/pose_estimation_3d2d.dir/clean
-.PHONY : CMakeFiles/pose_estimation_3d2d.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/pose_estimation_3d3d.dir
-
-# All Build rule for target.
-CMakeFiles/pose_estimation_3d3d.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pose_estimation_3d3d.dir/build.make CMakeFiles/pose_estimation_3d3d.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pose_estimation_3d3d.dir/build.make CMakeFiles/pose_estimation_3d3d.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/bl/Desktop/PoseEstimationDemo/BA_PnP_poseEstimation/build/CMakeFiles --progress-num=5,6 "Built target pose_estimation_3d3d"
-.PHONY : CMakeFiles/pose_estimation_3d3d.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/pose_estimation_3d3d.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/bl/Desktop/PoseEstimationDemo/BA_PnP_poseEstimation/build/CMakeFiles 2
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/pose_estimation_3d3d.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/bl/Desktop/PoseEstimationDemo/BA_PnP_poseEstimation/build/CMakeFiles 0
-.PHONY : CMakeFiles/pose_estimation_3d3d.dir/rule
-
-# Convenience name for target.
-pose_estimation_3d3d: CMakeFiles/pose_estimation_3d3d.dir/rule
-.PHONY : pose_estimation_3d3d
-
-# clean rule for target.
-CMakeFiles/pose_estimation_3d3d.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/pose_estimation_3d3d.dir/build.make CMakeFiles/pose_estimation_3d3d.dir/clean
-.PHONY : CMakeFiles/pose_estimation_3d3d.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/direct_method.dir
