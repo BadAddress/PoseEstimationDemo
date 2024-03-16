@@ -29,6 +29,8 @@ using namespace cv;
 typedef vector<Eigen::Vector2d, Eigen::aligned_allocator<Eigen::Vector2d>> ArrVec_2d;
 typedef vector<Eigen::Vector3d, Eigen::aligned_allocator<Eigen::Vector3d>> ArrVec_3d;
 
+void DrawGrid(double grid_size, int num_grid, int plane, double r, double g, double b); 
+void DrawCamera(const Eigen::Isometry3d& T, float lineWidth, float size,bool);
 
 
 
@@ -91,50 +93,43 @@ int main(){
     ArrVec_2d pixels_ref;
     vector<double> depths_ref;
     
-    // for (int i = 0; i < cnt; i++) {
-    //     int x = rng.uniform(boarder, gray_1.cols - boarder);  // don't pick pixels close to boarder
-    //     int y = rng.uniform(boarder, gray_1.rows - boarder);  // don't pick pixels close to boarder
-    //     int disparity = d1.at<uchar>(y, x);
-    //     if(disparity==0) continue;
-    //     double depth = disparity/5000.0; // you know this is disparity to depth
-    //     depths_ref.push_back(depth);
-    //     pixels_ref.push_back(Eigen::Vector2d(x, y));
-    // }
-
-
-
-    std::vector<cv::Point2f> corners; // 用于存储检测到的角点
-    int maxCorners = cnt; // 最大角点数量
-    double qualityLevel = 0.01; // 角点检测的质量水平参数
-    double minDistance = 10; // 角点之间的最小距离
-    int blockSize = 3; // 计算导数自相关矩阵时使用的块大小
-    bool useHarrisDetector = false; // 是否使用Harris角点检测，如果为false，则使用Shi-Tomasi方法
-    double k = 0.04; // Harris角点检测方程中的自由参数
-
-    // 使用goodFeaturesToTrack检测角点
-    cv::goodFeaturesToTrack(gray_1, corners, maxCorners, qualityLevel, minDistance, cv::Mat(), blockSize, useHarrisDetector, k);
-
-    for (size_t i = 0; i < corners.size(); i++) {
-        int x = static_cast<int>(corners[i].x);
-        int y = static_cast<int>(corners[i].y);
-
-        // 确保角点不靠近边界
-        if(x < boarder || x >= gray_1.cols - boarder || y < boarder || y >= gray_1.rows - boarder) continue;
-
+    for (int i = 0; i < cnt; i++) {
+        int x = rng.uniform(boarder, gray_1.cols - boarder);  // don't pick pixels close to boarder
+        int y = rng.uniform(boarder, gray_1.rows - boarder);  // don't pick pixels close to boarder
         int disparity = d1.at<uchar>(y, x);
-        if(disparity == 0) continue; // 忽略disparity为0的点
-        double depth = disparity / 50.0; // disparity到depth的转换
-
+        if(disparity==0) continue;
+        double depth = disparity/5000.0; // you know this is disparity to depth
         depths_ref.push_back(depth);
         pixels_ref.push_back(Eigen::Vector2d(x, y));
     }
 
 
 
+    // std::vector<cv::Point2f> corners; // 用于存储检测到的角点
+    // int maxCorners = cnt; // 最大角点数量
+    // double qualityLevel = 0.03; // 角点检测的质量水平参数
+    // double minDistance = 2; // 角点之间的最小距离
+    // int blockSize = 3; // 计算导数自相关矩阵时使用的块大小
+    // bool useHarrisDetector = false; // 是否使用Harris角点检测，如果为false，则使用Shi-Tomasi方法
+    // double k = 0.04; // Harris角点检测方程中的自由参数
 
+    // // 使用goodFeaturesToTrack检测角点
+    // cv::goodFeaturesToTrack(gray_1, corners, maxCorners, qualityLevel, minDistance, cv::Mat(), blockSize, useHarrisDetector, k);
 
+    // for (size_t i = 0; i < corners.size(); i++) {
+    //     int x = static_cast<int>(corners[i].x);
+    //     int y = static_cast<int>(corners[i].y);
 
+    //     // 确保角点不靠近边界
+    //     if(x < boarder || x >= gray_1.cols - boarder || y < boarder || y >= gray_1.rows - boarder) continue;
 
+    //     int disparity = d1.at<uchar>(y, x);
+    //     if(disparity == 0) continue; // 忽略disparity为0的点
+    //     double depth = disparity / 5000.0; // disparity到depth的转换
+
+    //     depths_ref.push_back(depth);
+    //     pixels_ref.push_back(Eigen::Vector2d(x, y));
+    // }
 
 
     Sophus::SE3d T_Pre_to_Cur;
@@ -143,6 +138,74 @@ int main(){
     for(int ScalingDownFactor = 8; ScalingDownFactor >=1;ScalingDownFactor/=2){
         DirectPoseEstimation(gray_1,gray_2,pixels_ref,depths_ref,T_Pre_to_Cur,ScalingDownFactor,K);
     }
+
+
+
+
+    Eigen::Isometry3d C0_POSE__W_based = Eigen::Isometry3d::Identity();
+    Eigen::Matrix3d R_W_to_C0;
+    R_W_to_C0 << 1, 0,  0,
+                 0, 0, -1,
+                 0, 1,  0;
+    Eigen::Vector3d C0_translation = Eigen::Vector3d(7,7,7);
+    C0_POSE__W_based.rotate(R_W_to_C0.inverse());
+    C0_POSE__W_based.translation() = C0_translation;
+
+    
+    Eigen::Matrix3d R_C0_to_C1 = T_Pre_to_Cur.so3().matrix();
+    Eigen::Vector3d t_C0_to_C1 = T_Pre_to_Cur.translation();
+    cout<< R_C0_to_C1<<endl;
+    cout<< t_C0_to_C1<<endl;
+
+    const static float viz_scaling_factor = 5000;
+    Eigen::Isometry3d C1_POSE__C0_based = Eigen::Isometry3d::Identity();
+    C1_POSE__C0_based.rotate(R_C0_to_C1.inverse());
+    C1_POSE__C0_based.translation() = -R_C0_to_C1.inverse()*t_C0_to_C1* viz_scaling_factor; 
+
+
+    Eigen::Isometry3d C1_POSE__W_based = C0_POSE__W_based * C1_POSE__C0_based ;
+
+
+
+    pangolin::CreateWindowAndBind("World Coordinate Frames", 1024, 720);
+    glEnable(GL_DEPTH_TEST);
+
+    // 定义观察相机的投影和初始模型视图矩阵
+    pangolin::OpenGlRenderState s_cam(
+        pangolin::ProjectionMatrix(640, 480, 500, 500, 320, 240, 0.1, 50),
+        pangolin::ModelViewLookAt(4, -4, 3, 0, 0, 0, pangolin::AxisZ)
+    );
+
+    // 创建一个交互式的相机视图
+    pangolin::Handler3D handler(s_cam);
+    pangolin::View& d_cam = pangolin::CreateDisplay()
+        .SetBounds(0.0, 1.0, 0.0, 1.0, -640.0f / 480.0f)
+        .SetHandler(&handler);
+
+
+
+    while (!pangolin::ShouldQuit()) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // 激活相机视图
+        d_cam.Activate(s_cam);
+
+        // 绘制坐标系
+        glLineWidth(4.0); // 设置线宽为3.0，您可以根据需要调整这个值
+        pangolin::glDrawAxis(10.0);
+        glLineWidth(1.0); // 设置线宽为3.0，您可以根据需要调整这个值
+            // 使用预定义的宏颜色绘制三个方向上的网格
+        DrawGrid(0.8, 12, 0, 0.3, 0.3, 0.3); // XY平面
+        DrawGrid(0.8, 12, 1, 0.3, 0.3, 0.3); // XZ平面
+        DrawGrid(0.8, 12, 2, 0.3, 0.3, 0.3); // YZ平面
+
+        
+        
+        DrawCamera(C0_POSE__W_based, 4.0, 4,1);
+        DrawCamera(C1_POSE__W_based, 4.0, 4,0);
+        pangolin::FinishFrame();
+    }        
+
+
 
     return 0;
 }
@@ -251,7 +314,7 @@ void DirectPoseEstimation(
             std::cout << "result is nan!" << endl;
            break;
         }                
-        if (deltaKesai.norm() < 1e-6) {
+        if (deltaKesai.norm() < 1e-3) {
             // converge
             break;   
         }
@@ -265,42 +328,115 @@ void DirectPoseEstimation(
     }
 
 
-    cv::Mat img_combined(std::max(img1_.rows, img2_.rows), img1_.cols + img2_.cols, img1_.type());
-    img1_.copyTo(img_combined(cv::Rect(0, 0, img1_.cols, img1_.rows)));
-    img2_.copyTo(img_combined(cv::Rect(img1_.cols, 0, img2_.cols, img2_.rows)));
+    // cv::Mat img_combined(std::max(img1_.rows, img2_.rows), img1_.cols + img2_.cols, img1_.type());
+    // img1_.copyTo(img_combined(cv::Rect(0, 0, img1_.cols, img1_.rows)));
+    // img2_.copyTo(img_combined(cv::Rect(img1_.cols, 0, img2_.cols, img2_.rows)));
 
 
-    // cv::Mat img1_,img2_;
-    for (size_t i = 0; i < px_ref.size(); i+=20) {
+    // // cv::Mat img1_,img2_;
+    // for (size_t i = 0; i < px_ref.size(); i+=20) {
 
         
 
-        double u_pre = px_ref_[i][0];
-        double v_pre = px_ref_[i][1];
-        double X_norm = (u_pre-cx)/fx;
-        double Y_norm = (v_pre-cy)/fy;
-        Eigen::Vector3d P_pre_based ( X_norm*depth_ref[i] , Y_norm*depth_ref[i] , depth_ref[i] );
-        Eigen::Vector3d P_cur_based = Trans_CoordSys1_to_CoordSys2 * P_pre_based;
-        if(P_cur_based[2]<0) continue;
+    //     double u_pre = px_ref_[i][0];
+    //     double v_pre = px_ref_[i][1];
+    //     double X_norm = (u_pre-cx)/fx;
+    //     double Y_norm = (v_pre-cy)/fy;
+    //     Eigen::Vector3d P_pre_based ( X_norm*depth_ref[i] , Y_norm*depth_ref[i] , depth_ref[i] );
+    //     Eigen::Vector3d P_cur_based = Trans_CoordSys1_to_CoordSys2 * P_pre_based;
+    //     if(P_cur_based[2]<0) continue;
 
-        double u = fx * P_cur_based[0]/P_cur_based[2] + cx ;
-        double v = fy * P_cur_based[1]/P_cur_based[2] + cy ;
+    //     double u = fx * P_cur_based[0]/P_cur_based[2] + cx ;
+    //     double v = fy * P_cur_based[1]/P_cur_based[2] + cy ;
 
 
 
-        cv::circle(img_combined, cv::Point(u_pre, v_pre), 3, cv::Scalar(0, 255, 0), -1);
+    //     cv::circle(img_combined, cv::Point(u_pre, v_pre), 3, cv::Scalar(0, 255, 0), -1);
     
-        // 在img2_上绘制点，并加上img1_.cols偏移
-        cv::circle(img_combined, cv::Point(u + img1_.cols, v), 3, cv::Scalar(0, 0, 255), -1);
+    //     // 在img2_上绘制点，并加上img1_.cols偏移
+    //     cv::circle(img_combined, cv::Point(u + img1_.cols, v), 3, cv::Scalar(0, 0, 255), -1);
         
-        // 绘制连接两点的线，并加上img1_.cols偏移
-        cv::line(img_combined, cv::Point(u_pre, v_pre), cv::Point(u + img1_.cols, v), cv::Scalar(255, 0, 0));
+    //     // 绘制连接两点的线，并加上img1_.cols偏移
+    //     cv::line(img_combined, cv::Point(u_pre, v_pre), cv::Point(u + img1_.cols, v), cv::Scalar(255, 0, 0));
 
-    }
+    // }
 
-    cv::imshow("Combined Image", img_combined);
-    cv::waitKey(0);
+    // cv::imshow("Combined Image", img_combined);
+    // cv::waitKey(0);
 
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void DrawGrid(double grid_size, int num_grid, int plane, double r, double g, double b) {
+        glColor3f(r, g, b);
+        glBegin(GL_LINES);
+        for (int i = -num_grid; i <= num_grid; ++i) {
+            double position = grid_size * i;
+            if (plane == 0) { // XY plane
+                glVertex3f(position, -num_grid * grid_size, 0);
+                glVertex3f(position, num_grid * grid_size, 0);
+                glVertex3f(-num_grid * grid_size, position, 0);
+                glVertex3f(num_grid * grid_size, position, 0);
+            } else if (plane == 1) { // XZ plane
+                glVertex3f(position, 0, -num_grid * grid_size);
+                glVertex3f(position, 0, num_grid * grid_size);
+                glVertex3f(-num_grid * grid_size, 0, position);
+                glVertex3f(num_grid * grid_size, 0, position);
+            } else if (plane == 2) { // YZ plane
+                glVertex3f(0, position, -num_grid * grid_size);
+                glVertex3f(0, position, num_grid * grid_size);
+                glVertex3f(0, -num_grid * grid_size, position);
+                glVertex3f(0, num_grid * grid_size, position);
+            }
+        }
+        glEnd();
+}
+
+
+
+
+void DrawCamera(const Eigen::Isometry3d& T, float lineWidth, float size,bool isDashed) {
+    glPushMatrix();
+    glMultMatrixd(T.data());
+    glLineWidth(lineWidth);
+
+    if (isDashed) {
+        // 启用stipple模式
+        glEnable(GL_LINE_STIPPLE);
+        // 设置虚线模式 (0x00FF表示将绘制一个短线段,然后跳过一个短线段)
+        glLineStipple(1, 0x00FF);
+    }
+
+    glBegin(GL_LINES);
+    // 绘制相机坐标系的XYZ轴
+    glColor3f(1.0, 0.0, 0.0); // X轴为红色
+    glVertex3f(0.0, 0.0, 0.0);
+    glVertex3f(size, 0.0, 0.0);
+    glColor3f(0.0, 1.0, 0.0); // Y轴为绿色
+    glVertex3f(0.0, 0.0, 0.0);
+    glVertex3f(0.0, size, 0.0);
+    glColor3f(0.0, 0.0, 1.0); // Z轴为蓝色
+    glVertex3f(0.0, 0.0, 0.0);
+    glVertex3f(0.0, 0.0, size);
+    glEnd();
+
+    if (isDashed) {
+        // 禁用stipple模式
+        glDisable(GL_LINE_STIPPLE);
+    }
+    glPopMatrix();
+}

@@ -29,7 +29,7 @@ include_directories("/usr/local/include/eigen3")
 
 
 
-# add_executable(pose_estimation_3d3d pose_estimation_3d2d.cpp)
+# add_executable(pose_estimation_3d3d pose_estimation_3d3d.cpp)
 # target_link_libraries(pose_estimation_3d3d ${CERES_LIBRARIES} ${Pangolin_LIBRARIES} ${OpenCV_LIBS} ${Sophus_INCLUDE_DIRS} fmt::fmt g2o_core g2o_stuff)
 
 
